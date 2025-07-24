@@ -216,7 +216,8 @@ export default function Navbar() {
     });
 
     // setActiveRoute(matchedRoute?.href || pathname);
-    setActiveRoute(matchedRoute?.href || pathname ?? "");
+    //setActiveRoute(matchedRoute?.href || pathname ?? "");
+    setActiveRoute(matchedRoute?.href || (pathname ?? ""));
   }, [pathname]);
 
   // Calculate scroll progress
