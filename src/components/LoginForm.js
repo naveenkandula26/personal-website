@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 //import { auth } from '../firebase';
-//import { auth, db } from '../../firebase/firebase';  ✅ From components folder
-import { auth, db } from '../../firebase/firebase';
+//import { auth, db } from '../../firebase/firebase';
+import { auth, db } from '../firebase/firebase';
+
 
 
 
