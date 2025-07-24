@@ -116,7 +116,7 @@ const components = {
   },
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
     <Image
-      src={props.src || ""}
+      src={typeof props.src === "string" ? props.src : ""}
       alt={props.alt || ""}
       width={0}
       height={0}
