@@ -6,12 +6,12 @@ const OTPForm = () => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
 
-  const setupRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-      'size': 'invisible',
-      'callback': (_response) => {}
-    }, auth);
-  };
+  //const setupRecaptcha = () => {
+    //window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+      //'size': 'invisible',
+      //'callback': (_response) => {}
+    //}, auth);
+  //};
 
   const sendOTP = () => {
     setupRecaptcha();
