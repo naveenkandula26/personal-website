@@ -215,7 +215,8 @@ export default function Navbar() {
       return false;
     });
 
-    setActiveRoute(matchedRoute?.href || pathname);
+    // setActiveRoute(matchedRoute?.href || pathname);
+    setActiveRoute(matchedRoute?.href || pathname ?? "");
   }, [pathname]);
 
   // Calculate scroll progress
