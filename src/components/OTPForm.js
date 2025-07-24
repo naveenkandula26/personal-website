@@ -9,7 +9,7 @@ const OTPForm = () => {
   const setupRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible',
-      'callback': (response) => {}
+      'callback': (_response) => {}
     }, auth);
   };
 
