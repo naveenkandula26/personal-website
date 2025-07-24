@@ -208,7 +208,8 @@ export default function Navbar() {
         return true;
       }
       // Prefix match for other routes (handles nested routes better)
-      if (item.href !== "/" && pathname.startsWith(item.href)) {
+      // if (item.href !== "/" && pathname.startsWith(item.href)) {
+      if (item.href !== "/" && pathname && pathname.startsWith(item.href)) {
         return true;
       }
       return false;
