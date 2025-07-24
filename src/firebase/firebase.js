@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC9QsYnvpbNhOIU4sS7aKxKy0s-uyjMBhI",
-  authDomain: "my-portfolio-f5c46.firebaseapp.com",
-  projectId: "my-portfolio-f5c46",
-  storageBucket: "my-portfolio-f5c46.firebasestorage.app",
-  messagingSenderId: "891751225530",
-  appId: "1:891751225530:web:99a2544b4a9b8fd7448a83"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
