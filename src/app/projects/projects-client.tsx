@@ -1,5 +1,6 @@
 "use client";
 
+import { easeInOut } from "framer-motion";
 import { ProjectCard } from "@/components/project-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
