@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+//import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
 const OTPForm = () => {
@@ -15,7 +15,7 @@ const OTPForm = () => {
 
   const sendOTP = () => {
     setupRecaptcha();
-    const appVerifier = window.recaptchaVerifier;
+    //const appVerifier = window.recaptchaVerifier;
     signInWithPhoneNumber(auth, phone, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
