@@ -11,10 +11,12 @@ const firebaseConfig = {
   appId: "1:891751225530:web:99a2544b4a9b8fd7448a83"
 };
 
-// Initialize Firebase only once
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+let app;
+if (typeof window !== "undefined") {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+}
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth = app ? getAuth(app) : null;
+const db = app ? getFirestore(app) : null;
 
 export { auth, db };
