@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { SkillsSection } from "@/components/sections/skills-section";
-import { ContactSection } from "@/components/sections/contact-section";
-
-export default function Home() {
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 
 import Navigation from "@/components/Navigation";
@@ -15,7 +11,11 @@ import { AboutSection } from "@/components/sections/about-section";
 import { EducationsSection } from "@/components/sections/educations-section";
 import { ExperiencesSection } from "@/components/sections/experiences-section";
 import { ProjectsSection } from "@/components/sections/projects-section";
-import  const router = useRouter();
+import { SkillsSection } from "@/components/sections/skills-section";
+import { ContactSection } from "@/components/sections/contact-section";
+
+export default function Home() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
