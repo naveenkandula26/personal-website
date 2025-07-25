@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
@@ -6,14 +6,16 @@ const OTPForm = () => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && !window.recaptchaVerifier) {
+  const sendOTP = () => {
+    if (typeof window === "undefined") return;
+
+    if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         "recaptcha-container",
         {
           size: "invisible",
           callback: () => {
-            // reCAPTCHA solved - allow sendOTP
+            // reCAPTCHA solved
           },
           "expired-callback": () => {
             console.warn("reCAPTCHA expired. Please try again.");
@@ -22,10 +24,9 @@ const OTPForm = () => {
         auth
       );
     }
-  }, []);
 
-  const sendOTP = () => {
     const appVerifier = window.recaptchaVerifier;
+
     signInWithPhoneNumber(auth, phone, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
