@@ -21,13 +21,6 @@ const OTPForm = () => {
             callback: () => {
               // reCAPTCHA solved
             },
-            "expired-callback": ()button>
-      <div id="recaptcha-container"></div>
-    </div>
-  );
-};
-
-export default OTPForm;
             "expired-callback": () => {
               console.warn("reCAPTCHA expired. Please try again.");
             },
@@ -81,4 +74,10 @@ export default OTPForm;
         onChange={(e) => setOtp(e.target.value)}
         placeholder="Enter OTP"
       />
-      <button onClick={verifyOTP}>Verify OTP</
+      <button onClick={verifyOTP}>Verify OTP</button>
+      <div id="recaptcha-container"></div>
+    </div>
+  );
+};
+
+export default OTPForm;
