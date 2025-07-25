@@ -6,54 +6,74 @@ const OTPForm = () => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState(null);
+  const [isRecaptchaReady, setIsRecaptchaReady] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined" || !auth) {
       setError("Firebase auth is not available.");
+      console.error("Auth not available:", auth);
       return;
     }
 
-    // Ensure recaptcha-container exists
     const recaptchaContainer = document.getElementById("recaptcha-container");
     if (!recaptchaContainer) {
       setError("reCAPTCHA container not found.");
+      console.error("reCAPTCHA container missing");
       return;
     }
 
-    // Initialize reCAPTCHA verifier
-    try {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: () => {
-            console.log("reCAPTCHA solved");
+    // Initialize reCAPTCHA
+    const initializeRecaptcha = () => {
+      try {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: () => {
+              console.log("reCAPTCHA solved");
+            },
+            "expired-callback": () => {
+              console.warn("reCAPTCHA expired. Please try again.");
+              setError("reCAPTCHA expired. Please try again.");
+              setIsRecaptchaReady(false);
+            },
           },
-          "expired-callback": () => {
-            console.warn("reCAPTCHA expired. Please try again.");
-            setError("reCAPTCHA expired. Please try again.");
-          },
-        },
-        auth
-      );
-      // Render the reCAPTCHA widget
-      window.recaptchaVerifier.render().catch((error) => {
-        console.error("Failed to render reCAPTCHA:", error);
-        setError("Failed to render reCAPTCHA. Please try again.");
-      });
-    } catch (error) {
-      console.error("Failed to initialize reCAPTCHA:", error);
-      setError("Failed to initialize reCAPTCHA: " + error.message);
-    }
+          auth
+        );
 
-    // Cleanup reCAPTCHA on component unmount
+        window.recaptchaVerifier.render().then(() => {
+          console.log("reCAPTCHA rendered successfully");
+          setIsRecaptchaReady(true);
+        }).catch((error) => {
+          console.error("Failed to render reCAPTCHA:", error);
+          setError(`Failed to render reCAPTCHA: ${error.message}`);
+        });
+      } catch (error) {
+        console.error("Failed to initialize reCAPTCHA:", error);
+        setError(`Failed to initialize reCAPTCHA: ${error.message}`);
+      }
+    };
+
+    // Retry initialization if auth is not ready
+    const checkAuthAndInitialize = () => {
+      if (auth) {
+        initializeRecaptcha();
+      } else {
+        console.warn("Auth not ready, retrying...");
+        setTimeout(checkAuthAndInitialize, 100); // Retry after 100ms
+      }
+    };
+
+    checkAuthAndInitialize();
+
+    // Cleanup
     return () => {
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
         window.recaptchaVerifier = null;
       }
     };
-  }, []); // Empty dependency array to run once on mount
+  }, []);
 
   const sendOTP = async () => {
     if (!auth) {
@@ -61,8 +81,13 @@ const OTPForm = () => {
       return;
     }
 
-    if (!window.recaptchaVerifier) {
-      setError("reCAPTCHA not initialized. Please try again.");
+    if (!isRecaptchaReady || !window.recaptchaVerifier) {
+      setError("reCAPTCHA not initialized. Please wait and try again.");
+      return;
+    }
+
+    if (!phone.match(/^\+\d{10,15}$/)) {
+      setError("Please enter a valid phone number with country code (e.g., +1234567890).");
       return;
     }
 
@@ -104,7 +129,9 @@ const OTPForm = () => {
         onChange={(e) => setPhone(e.target.value)}
         placeholder="Enter phone number (e.g., +1234567890)"
       />
-      <button onClick={sendOTP}>Send OTP</button>
+      <button onClick={sendOTP} disabled={!isRecaptchaReady}>
+        {isRecaptchaReady ? "Send OTP" : "Loading reCAPTCHA..."}
+      </button>
       <input
         type="text"
         value={otp}
