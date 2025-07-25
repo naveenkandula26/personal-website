@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth }        {
+import { auth } from "../firebase/firebase";
+
+const OTPForm = () => {
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        "recaptcha-container",
+        {
           size: "invisible",
           callback: () => {
             // reCAPTCHA solved - allow sendOTP
@@ -63,13 +73,3 @@ import { auth }        {
 };
 
 export default OTPForm;
-import React from "../firebase/firebase";
-
-const OTPForm = () => {
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
-
-  const setupRecaptcha = () => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        "recaptcha-container",
