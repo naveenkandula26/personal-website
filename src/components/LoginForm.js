@@ -10,7 +10,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = "/home";
+      window.location.href = "/#home";
     } catch (error) {
       console.error("Login error:", error);
     }
