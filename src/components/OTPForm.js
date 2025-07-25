@@ -7,6 +7,11 @@ const OTPForm = () => {
   const [otp, setOtp] = useState("");
 
   const setupRecaptcha = () => {
+    if (!auth) {
+      console.error("Firebase auth is not initialized.");
+      return;
+    }
+
     if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         "recaptcha-container",
