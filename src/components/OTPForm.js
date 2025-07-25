@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
-//import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
 const OTPForm = () => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
 
-  //const setupRecaptcha = () => {
-    //window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-      //'size': 'invisible',
-      //'callback': (_response) => {}
-    //}, auth);
-  //};
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible',
+        callback: (response) => {
+          // reCAPTCHA solved - allow sendOTP
+        },
+        'expired-callback': () => {
+          console.warn("reCAPTCHA expired. Please try again.");
+        }
+      }, auth);
+    }
+  };
 
   const sendOTP = () => {
     setupRecaptcha();
-    //const appVerifier = window.recaptchaVerifier;
+    const appVerifier = window.recaptchaVerifier;
     signInWithPhoneNumber(auth, phone, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
+        alert("OTP sent successfully!");
       }).catch((error) => {
         console.error("SMS not sent", error);
+        alert("Failed to send OTP. Please check the phone number.");
       });
   };
 
@@ -28,16 +37,28 @@ const OTPForm = () => {
     window.confirmationResult.confirm(otp)
       .then((result) => {
         console.log("Logged in user:", result.user);
+        alert("OTP verified successfully!");
       }).catch((error) => {
         console.error("OTP verification failed", error);
+        alert("Invalid OTP. Please try again.");
       });
   };
 
   return (
     <div>
-      <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone number" />
+      <input
+        type="text"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="Phone number"
+      />
       <button onClick={sendOTP}>Send OTP</button>
-      <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Enter OTP" />
+      <input
+        type="text"
+        value={otp}
+        onChange={(e) => setOtp(e.target.value)}
+        placeholder="Enter OTP"
+      />
       <button onClick={verifyOTP}>Verify OTP</button>
       <div id="recaptcha-container"></div>
     </div>
