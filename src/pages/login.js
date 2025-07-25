@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { onAuthStateChanged } from 'firebase/auth <h2>Login</h2>
-      <LoginForm />
-      <OTPForm />
-    </div>
-  );
-};
-
-export default LoginPage;
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import LoginForm from '../components/LoginForm';
@@ -29,4 +21,11 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-     
+      <h2>Login</h2>
+      <LoginForm />
+      <OTPForm />
+    </div>
+  );
+};
+
+export default LoginPage;
