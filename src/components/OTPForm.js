@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
@@ -6,13 +6,8 @@ const OTPForm = () => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
 
-  const setupRecaptcha = () => {
-    if (!auth) {
-      console.error("Firebase auth is not initialized.");
-      return;
-    }
-
-    if (!window.recaptchaVerifier) {
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         "recaptcha-container",
         {
@@ -27,10 +22,9 @@ const OTPForm = () => {
         auth
       );
     }
-  };
+  }, []);
 
   const sendOTP = () => {
-    setupRecaptcha();
     const appVerifier = window.recaptchaVerifier;
     signInWithPhoneNumber(auth, phone, appVerifier)
       .then((confirmationResult) => {
