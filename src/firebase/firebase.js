@@ -8,15 +8,11 @@ const firebaseConfig = {
   projectId: "my-portfolio-f5c46",
   storageBucket: "my-portfolio-f5c46.appspot.com",
   messagingSenderId: "891751225530",
-  appId: "1:891751225530:web:99a2544b4a9b8fd7448a83"
+  appId: "1:891751225530:web:99a2544b4a9b8fd7448a83",
 };
 
-let app;
-if (typeof window !== "undefined") {
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-}
-
-const auth = app ? getAuth(app) : null;
-const db = app ? getFirestore(app) : null;
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const auth = typeof window !== "undefined" ? getAuth(app) : null;
+const db = typeof window !== "undefined" ? getFirestore(app) : null;
 
 export { auth, db };
