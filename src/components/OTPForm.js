@@ -7,22 +7,37 @@ const OTPForm = () => {
   const [otp, setOtp] = useState("");
 
   const sendOTP = () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !auth) {
+      console.error("Firebase auth is not available.");
+      return;
+    }
 
     if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: () => {
-            // reCAPTCHA solved
+      try {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: () => {
+              // reCAPTCHA solved
+            },
+            "expired-callback": ()button>
+      <div id="recaptcha-container"></div>
+    </div>
+  );
+};
+
+export default OTPForm;
+            "expired-callback": () => {
+              console.warn("reCAPTCHA expired. Please try again.");
+            },
           },
-          "expired-callback": () => {
-            console.warn("reCAPTCHA expired. Please try again.");
-          },
-        },
-        auth
-      );
+          auth
+        );
+      } catch (error) {
+        console.error("Failed to initialize reCAPTCHA:", error);
+        return;
+      }
     }
 
     const appVerifier = window.recaptchaVerifier;
@@ -66,10 +81,4 @@ const OTPForm = () => {
         onChange={(e) => setOtp(e.target.value)}
         placeholder="Enter OTP"
       />
-      <button onClick={verifyOTP}>Verify OTP</button>
-      <div id="recaptcha-container"></div>
-    </div>
-  );
-};
-
-export default OTPForm;
+      <button onClick={verifyOTP}>Verify OTP</
