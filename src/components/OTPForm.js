@@ -8,7 +8,17 @@ const OTPForm = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !auth) return;
+    if (typeof window === "undefined" || !auth) {
+      setError("Firebase auth is not available.");
+      return;
+    }
+
+    // Ensure recaptcha-container exists
+    const recaptchaContainer = document.getElementById("recaptcha-container");
+    if (!recaptchaContainer) {
+      setError("reCAPTCHA container not found.");
+      return;
+    }
 
     // Initialize reCAPTCHA verifier
     try {
@@ -26,9 +36,14 @@ const OTPForm = () => {
         },
         auth
       );
+      // Render the reCAPTCHA widget
+      window.recaptchaVerifier.render().catch((error) => {
+        console.error("Failed to render reCAPTCHA:", error);
+        setError("Failed to render reCAPTCHA. Please try again.");
+      });
     } catch (error) {
       console.error("Failed to initialize reCAPTCHA:", error);
-      setError("Failed to initialize reCAPTCHA. Please try again.");
+      setError("Failed to initialize reCAPTCHA: " + error.message);
     }
 
     // Cleanup reCAPTCHA on component unmount
@@ -38,7 +53,7 @@ const OTPForm = () => {
         window.recaptchaVerifier = null;
       }
     };
-  }, []);
+  }, []); // Empty dependency array to run once on mount
 
   const sendOTP = async () => {
     if (!auth) {
@@ -59,7 +74,7 @@ const OTPForm = () => {
       setError(null);
     } catch (error) {
       console.error("SMS not sent:", error);
-      setError("Failed to send OTP. Please check the phone number.");
+      setError(`Failed to send OTP: ${error.message}`);
     }
   };
 
@@ -76,7 +91,7 @@ const OTPForm = () => {
       setError(null);
     } catch (error) {
       console.error("OTP verification failed:", error);
-      setError("Invalid OTP. Please try again.");
+      setError(`Invalid OTP: ${error.message}`);
     }
   };
 
